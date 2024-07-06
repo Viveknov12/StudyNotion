@@ -1,62 +1,41 @@
-import { useEffect, useState } from "react"
-import { AiOutlineMenu, AiOutlineShoppingCart } from "react-icons/ai"
-import { BsChevronDown } from "react-icons/bs"
-import { useSelector } from "react-redux"
-import { Link, matchPath, useLocation } from "react-router-dom"
+import { useEffect, useState } from "react";
+import { AiOutlineMenu, AiOutlineShoppingCart } from "react-icons/ai";
+import { BsChevronDown } from "react-icons/bs";
+import { useSelector } from "react-redux";
+import { Link, matchPath, useLocation } from "react-router-dom";
 
-import logo from "../../assets/Logo/Logo-Full-Light.png"
-import { NavbarLinks } from "../../data/navbar-links"
-import { apiConnector } from "../../services/apiConnector"
-import { categories } from "../../services/apis"
-import { ACCOUNT_TYPE } from "../../utils/constants"
-import ProfileDropdown from "../core/Auth/ProfileDropdown"
-
-// const subLinks = [
-//   {
-//     title: "Python",
-//     link: "/catalog/python",
-//   },
-//   {
-//     title: "javascript",
-//     link: "/catalog/javascript",
-//   },
-//   {
-//     title: "web-development",
-//     link: "/catalog/web-development",
-//   },
-//   {
-//     title: "Android Development",
-//     link: "/catalog/Android Development",
-//   },
-// ];
+import logo from "../../assets/Logo/Logo-Full-Light.png";
+import { NavbarLinks } from "../../data/navbar-links";
+import { apiConnector } from "../../services/apiConnector";
+import { categories } from "../../services/apis";
+import { ACCOUNT_TYPE } from "../../utils/constants";
+import ProfileDropdown from "../core/Auth/ProfileDropdown";
 
 function Navbar() {
-  const { token } = useSelector((state) => state.auth)
-  const { user } = useSelector((state) => state.profile)
-  const { totalItems } = useSelector((state) => state.cart)
-  const location = useLocation()
+  const { token } = useSelector((state) => state.auth);
+  const { user } = useSelector((state) => state.profile);
+  const { totalItems } = useSelector((state) => state.cart);
+  const location = useLocation();
 
-  const [subLinks, setSubLinks] = useState([])
-  const [loading, setLoading] = useState(false)
+  const [subLinks, setSubLinks] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    ;(async () => {
-      setLoading(true)
+    (async () => {
+      setLoading(true);
       try {
-        const res = await apiConnector("GET", categories.CATEGORIES_API)
-        setSubLinks(res.data.data)
+        const res = await apiConnector("GET", categories.CATEGORIES_API);
+        setSubLinks(res.data.data || []);
       } catch (error) {
-        console.log("Could not fetch Categories.", error)
+        console.log("Could not fetch Categories.", error);
       }
-      setLoading(false)
-    })()
-  }, [])
-
-  // console.log("sub links", subLinks)
+      setLoading(false);
+    })();
+  }, []);
 
   const matchRoute = (route) => {
-    return matchPath({ path: route }, location.pathname)
-  }
+    return matchPath({ path: route }, location.pathname);
+  };
 
   return (
     <div
@@ -144,18 +123,18 @@ function Navbar() {
             </Link>
           )}
           {token === null && (
-            <Link to="/login">
-              <button className="rounded-[8px] border border-richblack-700 bg-richblack-800 px-[12px] py-[8px] text-richblack-100">
-                Log in
-              </button>
-            </Link>
-          )}
-          {token === null && (
-            <Link to="/signup">
-              <button className="rounded-[8px] border border-richblack-700 bg-richblack-800 px-[12px] py-[8px] text-richblack-100">
-                Sign up
-              </button>
-            </Link>
+            <>
+              <Link to="/login">
+                <button className="rounded-[8px] border border-richblack-700 bg-richblack-800 px-[12px] py-[8px] text-richblack-100">
+                  Log in
+                </button>
+              </Link>
+              <Link to="/signup">
+                <button className="rounded-[8px] border border-richblack-700 bg-richblack-800 px-[12px] py-[8px] text-richblack-100">
+                  Sign up
+                </button>
+              </Link>
+            </>
           )}
           {token !== null && <ProfileDropdown />}
         </div>
@@ -164,7 +143,7 @@ function Navbar() {
         </button>
       </div>
     </div>
-  )
+  );
 }
 
-export default Navbar
+export default Navbar;
